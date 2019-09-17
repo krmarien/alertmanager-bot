@@ -48,7 +48,6 @@ require (
 	github.com/satori/go.uuid v1.1.0 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
 	github.com/stretchr/testify v1.3.0
-	github.com/tucnak/telebot v0.0.0-20170912115553-00cebf376d79
 	github.com/weaveworks/mesh v0.0.0-20160126163632-f74318fb713b // indirect
 	golang.org/x/net v0.0.0-20181213202711-891ebc4b82d6 // indirect
 	golang.org/x/text v0.3.2 // indirect
@@ -57,6 +56,9 @@ require (
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/gemnasium/logrus-airbrake-hook.v2 v2.1.2 // indirect
+	gopkg.in/tucnak/telebot.v2 v2.0.0-20190415090633-8c1c512262f2
 	gopkg.in/vmihailenco/msgpack.v2 v2.9.1 // indirect
 	gopkg.in/yaml.v2 v2.2.2 // indirect
 )
+
+go 1.13

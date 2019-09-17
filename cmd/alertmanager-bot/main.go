@@ -55,16 +55,17 @@ func main() {
 	godotenv.Load()
 
 	config := struct {
-		alertmanager   *url.URL
-		boltPath       string
-		consul         *url.URL
-		listenAddr     string
-		logLevel       string
-		logJSON        bool
-		store          string
-		telegramAdmins []int
-		telegramToken  string
-		templatesPaths []string
+		alertmanager                *url.URL
+		boltPath                    string
+		consul                      *url.URL
+		listenAddr                  string
+		logLevel                    string
+		logJSON                     bool
+		store                       string
+		telegramAdmins              []int
+		telegramToken               string
+		telegramDisableNotification bool
+		templatesPaths              []string
 	}{}
 
 	a := kingpin.New("alertmanager-bot", "Bot for Prometheus' Alertmanager")
@@ -112,6 +113,10 @@ func main() {
 		Envar("TELEGRAM_TOKEN").
 		StringVar(&config.telegramToken)
 
+	a.Flag("telegram.disable_notification", "Disable the notification of Telegram messages").
+		Envar("TELEGRAM_DISABLE_NOTIFICATION").
+		BoolVar(&config.telegramDisableNotification)
+
 	a.Flag("template.paths", "The paths to the template").
 		Envar("TEMPLATE_PATHS").
 		Default("/templates/default.tmpl").
@@ -146,7 +151,11 @@ func main() {
 	{
 		funcs := template.DefaultFuncs
 		funcs["since"] = func(t time.Time) string {
-			return durafmt.Parse(time.Since(t)).String()
+			since := durafmt.Parse(time.Since(t)).String()
+			if since == "" {
+				since = "0 seconds"
+			}
+			return since
 		}
 		funcs["duration"] = func(start time.Time, end time.Time) string {
 			return durafmt.Parse(end.Sub(start)).String()
@@ -200,7 +209,7 @@ func main() {
 		}
 
 		bot, err := telegram.NewBot(
-			chats, config.telegramToken, config.telegramAdmins[0],
+			chats, config.telegramToken, config.telegramAdmins[0], config.telegramDisableNotification,
 			telegram.WithLogger(tlogger),
 			telegram.WithAddr(config.listenAddr),
 			telegram.WithAlertmanager(config.alertmanager),
